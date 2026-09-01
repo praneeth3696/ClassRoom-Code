@@ -1,0 +1,972 @@
+{
+  "$comment": "Department of Applied Mathematics and Computational Sciences. Lab content is taken from the Semester V Big Data and Modern Databases exercises. Load with: npm run seed:college -- ./seed/psg-amcs.json",
+  "department": {
+    "name": "Applied Mathematics and Computational Sciences",
+    "code": "AMCS"
+  },
+  "staff": [
+    {
+      "name": "Dr. Anita Rao",
+      "email": "anita.rao@psgtech.ac.in",
+      "role": "teacher"
+    },
+    {
+      "name": "Prof. Vikram Shah",
+      "email": "vikram.shah@psgtech.ac.in",
+      "role": "teacher"
+    },
+    {
+      "name": "Dr. Meena Sundaram",
+      "email": "meena.sundaram@psgtech.ac.in",
+      "role": "teacher"
+    },
+    {
+      "name": "Prof. Karthik Iyer",
+      "email": "karthik.iyer@psgtech.ac.in",
+      "role": "teacher"
+    },
+    {
+      "name": "Dr. Revathi Nair",
+      "email": "revathi.nair@psgtech.ac.in",
+      "role": "teacher"
+    },
+    {
+      "name": "Dr. HOD AMCS",
+      "email": "hod.amcs@psgtech.ac.in",
+      "role": "admin"
+    }
+  ],
+  "programmes": [
+    {
+      "name": "Software Systems",
+      "code": "SS",
+      "degree": "M.Sc",
+      "durationYears": 5,
+      "subjects": [
+        {
+          "code": "5SST01",
+          "name": "Compiler Design",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5SST02",
+          "name": "Computer Networks",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5SST03",
+          "name": "Big Data and Modern Databases",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5SST04",
+          "name": "Software Engineering",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5SST05",
+          "name": "Machine Learning",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5SSL01",
+          "name": "Big Data and Modern Databases Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        },
+        {
+          "code": "5SSL02",
+          "name": "Computer Networks Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        },
+        {
+          "code": "5SSL03",
+          "name": "Software Engineering Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        }
+      ],
+      "batches": [
+        {
+          "admissionYear": 2023,
+          "section": "A",
+          "currentSemester": 5,
+          "students": [
+            {
+              "name": "Aditya Menon",
+              "email": "ss2301@psgtech.ac.in",
+              "rollNumber": "23SS001"
+            },
+            {
+              "name": "Bhavna Iyer",
+              "email": "ss2302@psgtech.ac.in",
+              "rollNumber": "23SS002"
+            },
+            {
+              "name": "Chetan Kulkarni",
+              "email": "ss2303@psgtech.ac.in",
+              "rollNumber": "23SS003"
+            },
+            {
+              "name": "Divya Ramesh",
+              "email": "ss2304@psgtech.ac.in",
+              "rollNumber": "23SS004"
+            },
+            {
+              "name": "Eshwar Prasad",
+              "email": "ss2305@psgtech.ac.in",
+              "rollNumber": "23SS005"
+            },
+            {
+              "name": "Fathima Noor",
+              "email": "ss2306@psgtech.ac.in",
+              "rollNumber": "23SS006"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Theoretical Computer Science",
+      "code": "TCS",
+      "degree": "M.Sc",
+      "durationYears": 5,
+      "subjects": [
+        {
+          "code": "5TCST01",
+          "name": "Theory of Computation",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5TCST02",
+          "name": "Advanced Algorithms",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5TCST03",
+          "name": "Graph Theory",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5TCST04",
+          "name": "Cryptology",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5TCST05",
+          "name": "Formal Methods",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5TCSL01",
+          "name": "Algorithms Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        },
+        {
+          "code": "5TCSL02",
+          "name": "Formal Methods Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        },
+        {
+          "code": "5TCSL03",
+          "name": "Programming Paradigms Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        }
+      ],
+      "batches": [
+        {
+          "admissionYear": 2023,
+          "section": "A",
+          "currentSemester": 5,
+          "students": [
+            {
+              "name": "Gopal Krishnan",
+              "email": "tcs2301@psgtech.ac.in",
+              "rollNumber": "23TCS001"
+            },
+            {
+              "name": "Harini Suresh",
+              "email": "tcs2302@psgtech.ac.in",
+              "rollNumber": "23TCS002"
+            },
+            {
+              "name": "Ishaan Verma",
+              "email": "tcs2303@psgtech.ac.in",
+              "rollNumber": "23TCS003"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Data Science",
+      "code": "DS",
+      "degree": "M.Sc",
+      "durationYears": 5,
+      "subjects": [
+        {
+          "code": "5DST01",
+          "name": "Statistical Inference",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5DST02",
+          "name": "Data Mining",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5DST03",
+          "name": "Big Data Analytics",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5DST04",
+          "name": "Deep Learning",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5DST05",
+          "name": "Data Visualisation",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5DSL01",
+          "name": "Data Mining Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        },
+        {
+          "code": "5DSL02",
+          "name": "Big Data Analytics Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        },
+        {
+          "code": "5DSL03",
+          "name": "Deep Learning Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        }
+      ],
+      "batches": [
+        {
+          "admissionYear": 2023,
+          "section": "A",
+          "currentSemester": 5,
+          "students": [
+            {
+              "name": "Janani Mohan",
+              "email": "ds2301@psgtech.ac.in",
+              "rollNumber": "23DS001"
+            },
+            {
+              "name": "Kiran Das",
+              "email": "ds2302@psgtech.ac.in",
+              "rollNumber": "23DS002"
+            },
+            {
+              "name": "Lavanya Pillai",
+              "email": "ds2303@psgtech.ac.in",
+              "rollNumber": "23DS003"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cyber Security",
+      "code": "CY",
+      "degree": "M.Sc",
+      "durationYears": 5,
+      "subjects": [
+        {
+          "code": "5CYT01",
+          "name": "Network Security",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5CYT02",
+          "name": "Applied Cryptography",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5CYT03",
+          "name": "Digital Forensics",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5CYT04",
+          "name": "Secure Software Engineering",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5CYT05",
+          "name": "Malware Analysis",
+          "kind": "theory",
+          "semester": 5,
+          "credits": 4
+        },
+        {
+          "code": "5CYL01",
+          "name": "Network Security Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        },
+        {
+          "code": "5CYL02",
+          "name": "Digital Forensics Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        },
+        {
+          "code": "5CYL03",
+          "name": "Secure Coding Lab",
+          "kind": "lab",
+          "semester": 5,
+          "credits": 2
+        }
+      ],
+      "batches": [
+        {
+          "admissionYear": 2023,
+          "section": "A",
+          "currentSemester": 5,
+          "students": [
+            {
+              "name": "Manoj Pillai",
+              "email": "cy2301@psgtech.ac.in",
+              "rollNumber": "23CY001"
+            },
+            {
+              "name": "Nithya Balan",
+              "email": "cy2302@psgtech.ac.in",
+              "rollNumber": "23CY002"
+            },
+            {
+              "name": "Omar Sheikh",
+              "email": "cy2303@psgtech.ac.in",
+              "rollNumber": "23CY003"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "classes": [
+    {
+      "programmeCode": "SS",
+      "subjectCode": "5SSL01",
+      "batchYear": 2023,
+      "batchSection": "A",
+      "academicYear": "2026-27",
+      "semester": 5,
+      "teachers": [
+        "anita.rao@psgtech.ac.in",
+        "vikram.shah@psgtech.ac.in"
+      ],
+      "worksheets": [
+        {
+          "title": "Lab Exercise 1 - MongoDB Document Modelling",
+          "description": "Hierarchical and document data modelling using MongoDB, following the virtual library case study: users, books, authors, publishers, categories and notes. The collections are already created and populated for you - concentrate on the queries.",
+          "deadlineInDays": 10,
+          "status": "published",
+          "allowLateSubmissions": false,
+          "datasetEngine": "mongodb",
+          "datasetScript": "db.user.insertMany([\n  { username: 'ram', password: 'x1', active: 'Y', mobileno: '9840012345',\n    emails: ['ram@psgtech.ac.in', 'ram.k@gmail.com'],\n    address: [ { street: '12 North St', city: 'Coimbatore', zip: '641004', state: 'Tamilnadu', country: 'India' } ] },\n  { username: 'lakshmi', password: 'x2', active: 'Y', mobileno: '9840022345',\n    emails: ['lakshmi@psgtech.ac.in'],\n    address: [ { street: '5 Beacon St', city: 'Boston', zip: '02108', state: 'MA', country: 'USA' },\n               { street: '9 Elm Rd', city: 'Chennai', zip: '600001', state: 'Tamilnadu', country: 'India' } ] },\n  { username: 'john', password: 'x3', active: 'N', mobileno: '9840032345',\n    emails: ['john@psgtech.ac.in'],\n    address: [ { street: '77 Newbury St', city: 'Boston', zip: '02116', state: 'MA', country: 'USA' } ] },\n  { username: 'priya', password: 'x4', active: 'Y', mobileno: '9840042345',\n    emails: [],\n    address: [] }\n]);\n\ndb.book.insertMany([\n  { title: 'Database Concepts', isbn: '978-0001',\n    author: [ { firstname: 'Abraham', lastname: 'Silberschatz' }, { firstname: 'Henry', lastname: 'Korth' } ],\n    publisher: [ { name: 'McGraw Hill', year: 2019, city: 'New York',\n                   address: { city: 'New York', zip: '10001', state: 'NY', country: 'USA' } },\n                 { name: 'Pearson India', year: 2020, city: 'Chennai',\n                   address: { city: 'Chennai', zip: '600001', state: 'Tamilnadu', country: 'India' } } ],\n    available: 'Y', pages: 900, summary: 'Core database concepts.',\n    categories: ['Database', 'Computer Science'],\n    notes: [ { userid: '9840012345', note: 'Great chapter on normalisation.' } ],\n    user: '9840012345', dateissued: '2026-08-01', returndate: '2026-08-20', language: 'English' },\n\n  { title: 'Computer Networks', isbn: '978-0002',\n    author: [ { firstname: 'Andrew', lastname: 'Tanenbaum' } ],\n    publisher: [ { name: 'Pearson India', year: 2021, city: 'Chennai',\n                   address: { city: 'Chennai', zip: '600001', state: 'Tamilnadu', country: 'India' } } ],\n    available: 'N', pages: 850, summary: 'Networking from the physical layer up.',\n    categories: ['Networking'],\n    notes: [ { userid: '9840022345', note: 'Read chapters 1 to 4.' },\n             { userid: '9840012345', note: 'Good diagrams throughout.' } ],\n    user: '9840022345', dateissued: '2026-08-05', returndate: '2026-08-25', language: 'English' },\n\n  { title: 'The Gift', isbn: '978-0003',\n    author: [ { firstname: 'Danielle', lastname: 'Steel' } ],\n    publisher: [ { name: 'Delacorte Press', year: 2018, city: 'New York',\n                   address: { city: 'New York', zip: '10019', state: 'NY', country: 'USA' } } ],\n    available: 'Y', pages: 320, summary: 'A family drama.',\n    categories: ['Fiction'],\n    notes: [],\n    user: '9840012345', dateissued: '2026-07-20', returndate: '2026-08-10', language: 'English' },\n\n  { title: 'Operating System Concepts', isbn: '978-0004',\n    author: [ { firstname: 'Abraham', lastname: 'Silberschatz' }, { firstname: 'Peter', lastname: 'Galvin' },\n              { firstname: 'Greg', lastname: 'Gagne' } ],\n    publisher: [ { name: 'Wiley India', year: 2020, city: 'Chennai',\n                   address: { city: 'Chennai', zip: '600002', state: 'Tamilnadu', country: 'India' } },\n                 { name: 'Wiley', year: 2018, city: 'Hoboken',\n                   address: { city: 'Hoboken', zip: '07030', state: 'NJ', country: 'USA' } },\n                 { name: 'McGraw Hill', year: 2017, city: 'New York',\n                   address: { city: 'New York', zip: '10001', state: 'NY', country: 'USA' } } ],\n    available: 'Y', pages: 1000, summary: 'Processes, memory and file systems.',\n    categories: ['Operating Systems', 'Computer Science'],\n    notes: [ { userid: '9840032345', note: 'Chapter 5 is dense.' } ],\n    user: '9840032345', dateissued: '2026-08-02', returndate: '2026-08-22', language: 'English' },\n\n  { title: 'Tamil Ilakkiya Varalaru', isbn: '978-0005',\n    author: [ { firstname: 'Mu', lastname: 'Varadarajan' } ],\n    publisher: [ { name: 'Sahitya Akademi', year: 2016, city: 'Chennai',\n                   address: { city: 'Chennai', zip: '600018', state: 'Tamilnadu', country: 'India' } } ],\n    available: 'N', pages: 400, summary: 'History of Tamil literature.',\n    categories: ['Literature'],\n    notes: [],\n    user: '9840022345', dateissued: '2026-07-15', returndate: '2026-08-05', language: 'Tamil' }\n]);\n",
+          "questions": [
+            {
+              "title": "Retrieve all information on all of the books",
+              "description": "Return every document in the book collection.",
+              "referenceNotes": "db.collection.find({}) with no filter returns everything.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 2,
+              "testCases": [
+                {
+                  "label": "All five books returned",
+                  "input": "db.book.countDocuments({})",
+                  "expectedOutput": "[{\"value\": 5}]"
+                }
+              ]
+            },
+            {
+              "title": "Books written by Danielle Steel",
+              "description": "Retrieve the title of every book where an author's first name is 'Danielle'.\n\nReturn only the field: title.",
+              "referenceNotes": "Dot notation reaches into an array of embedded documents: 'author.firstname'. Suppress _id with a projection.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 3,
+              "testCases": [
+                {
+                  "label": "Only The Gift",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"The Gift\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Users living in Boston",
+              "description": "Retrieve the username of every user who has an address in the city 'Boston'.\n\nReturn only the field: username.",
+              "referenceNotes": "address is an array of objects, so 'address.city' matches if any element matches.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 3,
+              "testCases": [
+                {
+                  "label": "Two Boston users",
+                  "input": "",
+                  "expectedOutput": "[{\"username\": \"john\"}, {\"username\": \"lakshmi\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Books with multiple publishers",
+              "description": "List the title of every book that has more than one publisher.\n\nReturn only the field: title.",
+              "referenceNotes": "A second array element exists when 'publisher.1' exists, or use $size in an $expr.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 4,
+              "testCases": [
+                {
+                  "label": "Two books",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"Database Concepts\"}, {\"title\": \"Operating System Concepts\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Books that have notes",
+              "description": "List the title of every book whose notes array is not empty.\n\nReturn only the field: title.",
+              "referenceNotes": "An empty array is not the same as a missing field. $ne: [] or $size work here.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 3,
+              "testCases": [
+                {
+                  "label": "Three books with notes",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"Computer Networks\"}, {\"title\": \"Database Concepts\"}, {\"title\": \"Operating System Concepts\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Books published by Indian publishers",
+              "description": "Find the title of every book that has at least one publisher whose address country is 'India'.\n\nReturn only the field: title.",
+              "referenceNotes": "publisher is an array and each element has an embedded address object.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 4,
+              "testCases": [
+                {
+                  "label": "Four Indian-published books",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"Computer Networks\"}, {\"title\": \"Database Concepts\"}, {\"title\": \"Operating System Concepts\"}, {\"title\": \"Tamil Ilakkiya Varalaru\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Books published by more than two publishers",
+              "description": "List the title of every book with more than two publishers.\n\nReturn only the field: title.",
+              "referenceNotes": "Compare $size against a number inside $expr, or use an aggregation $match.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 4,
+              "testCases": [
+                {
+                  "label": "Only one such book",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"Operating System Concepts\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Count of books currently available",
+              "description": "Return the number of books whose available field is 'Y', as a single value.",
+              "referenceNotes": "countDocuments returns a plain number, which this platform shows in a column named value.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 2,
+              "testCases": [
+                {
+                  "label": "Three available",
+                  "input": "",
+                  "expectedOutput": "[{\"value\": 3}]"
+                }
+              ]
+            },
+            {
+              "title": "Language-wise book count",
+              "description": "Group the books by their language and return the number of books in each.\n\nReturn the fields: language, count.",
+              "referenceNotes": "$group with _id: '$language' and $sum: 1, then $project to rename _id to language.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 5,
+              "testCases": [
+                {
+                  "label": "English 4, Tamil 1",
+                  "input": "",
+                  "expectedOutput": "[{\"language\": \"English\", \"count\": 4}, {\"language\": \"Tamil\", \"count\": 1}]"
+                }
+              ]
+            },
+            {
+              "title": "Top two publishers by number of books",
+              "description": "Count how many books each publisher has published, then return the top two.\n\nReturn the fields: publisher, books. Break ties by publisher name ascending.",
+              "referenceNotes": "$unwind the publisher array first, then $group, $sort, $limit.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 6,
+              "testCases": [
+                {
+                  "label": "Two publishers with two books each",
+                  "input": "",
+                  "expectedOutput": "[{\"publisher\": \"McGraw Hill\", \"books\": 2}, {\"publisher\": \"Pearson India\", \"books\": 2}]"
+                }
+              ]
+            },
+            {
+              "title": "Second author of every multi-author book",
+              "description": "For each book that has at least two authors, print the book title and the second author's first and last name.\n\nReturn the fields: title, firstname, lastname.",
+              "referenceNotes": "$arrayElemAt with index 1 picks the second element of an array.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 6,
+              "testCases": [
+                {
+                  "label": "Two multi-author books",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"Database Concepts\", \"firstname\": \"Henry\", \"lastname\": \"Korth\"}, {\"title\": \"Operating System Concepts\", \"firstname\": \"Peter\", \"lastname\": \"Galvin\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Aggregation pipeline: books published from Chennai",
+              "description": "Write an aggregation pipeline that returns the book title and the first author's first name for every book published by a publisher in the city 'Chennai', ordered by book title.\n\nReturn the fields: title, author_firstname.",
+              "referenceNotes": "$unwind, then $match on publisher.city, then $project and $sort. This question checks the order of your rows.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 8,
+              "orderedComparison": true,
+              "testCases": [
+                {
+                  "label": "Ordered by title",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"Computer Networks\", \"author_firstname\": \"Andrew\"}, {\"title\": \"Database Concepts\", \"author_firstname\": \"Abraham\"}, {\"title\": \"Operating System Concepts\", \"author_firstname\": \"Abraham\"}, {\"title\": \"Tamil Ilakkiya Varalaru\", \"author_firstname\": \"Mu\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Books borrowed by the user 'ram' ($lookup)",
+              "description": "Using $lookup to join book.user against user.mobileno, print the titles of the books borrowed by the user whose username is 'ram'.\n\nReturn only the field: title.",
+              "referenceNotes": "$lookup is a left outer join. Unwind the joined array before matching on the username.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 8,
+              "testCases": [
+                {
+                  "label": "Two books for ram",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"Database Concepts\"}, {\"title\": \"The Gift\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Books left with no notes",
+              "description": "Find the title of every book whose notes array is empty.\n\nReturn only the field: title.",
+              "referenceNotes": "The opposite of the earlier notes question. $size: 0 matches an empty array.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 3,
+              "testCases": [
+                {
+                  "label": "Two books without notes",
+                  "input": "",
+                  "expectedOutput": "[{\"title\": \"Tamil Ilakkiya Varalaru\"}, {\"title\": \"The Gift\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Explain your aggregation approach",
+              "description": "In comments at the top of your script, explain in four or five sentences why $unwind was needed for the publisher questions but not for the simple find() queries, and what would change if a book could have no publisher at all.\n\nThen print your roll number.",
+              "referenceNotes": "This question is read by your teacher. There are no test cases.",
+              "allowedLanguages": [
+                "mongodb"
+              ],
+              "points": 5,
+              "testCases": []
+            }
+          ]
+        },
+        {
+          "title": "Lab Exercise 2 - Object Relational Database",
+          "description": "Structured types, collections and nested access, run on PostgreSQL. The composite types ADDRESS_TY and PERSON_TY and the table CUSTOMER_1 are already created for you. The Oracle-only features - VARRAY, nested tables, REF and type inheritance - are in the separate Oracle worksheet, which needs the department server.",
+          "deadlineInDays": 17,
+          "status": "published",
+          "allowLateSubmissions": false,
+          "datasetEngine": "postgres",
+          "datasetScript": "CREATE TYPE address_ty AS (street varchar(60), city varchar(30), state varchar(30), zip varchar(10));\nCREATE TYPE person_ty AS (firstname varchar(30), lastname varchar(30), age integer, addr address_ty);\nCREATE TABLE customer_1 (customer_id integer PRIMARY KEY, person person_ty, phones text[]);\nINSERT INTO customer_1 VALUES\n (1, ROW('Ram','Kumar',21, ROW('12 North St','Coimbatore','Tamilnadu','641004')::address_ty)::person_ty, ARRAY['9840012345','04422334455']),\n (2, ROW('Lakshmi','Narayan',22, ROW('5 Beacon St','Boston','MA','02108')::address_ty)::person_ty, ARRAY['9840022345']),\n (3, ROW('John','Peter',23, ROW('9 Elm Rd','Chennai','Tamilnadu','600001')::address_ty)::person_ty, ARRAY['9840032345','04428889999','04428889000']),\n (4, ROW('Priya','Raj',20, ROW('77 Mount Rd','Chennai','Tamilnadu','600002')::address_ty)::person_ty, ARRAY['9840042345','04426667777']),\n (5, ROW('Suresh','Babu',24, ROW('3 Lake View','Bengaluru','Karnataka','560001')::address_ty)::person_ty, ARRAY[]::text[]);\n",
+          "questions": [
+            {
+              "title": "Print all customer details",
+              "description": "Print the customer id, first name, last name and city of every customer in CUSTOMER_1, ordered by customer id.\n\nReturn the columns: customer_id, firstname, lastname, city.",
+              "referenceNotes": "The person column is a composite type. Reach into it with (person).firstname, and nest further with (person).addr.city. The parentheses are required.",
+              "allowedLanguages": [
+                "postgres"
+              ],
+              "points": 5,
+              "orderedComparison": true,
+              "testCases": [
+                {
+                  "label": "Five customers in id order",
+                  "input": "",
+                  "expectedOutput": "[{\"customer_id\": 1, \"firstname\": \"Ram\", \"lastname\": \"Kumar\", \"city\": \"Coimbatore\"}, {\"customer_id\": 2, \"firstname\": \"Lakshmi\", \"lastname\": \"Narayan\", \"city\": \"Boston\"}, {\"customer_id\": 3, \"firstname\": \"John\", \"lastname\": \"Peter\", \"city\": \"Chennai\"}, {\"customer_id\": 4, \"firstname\": \"Priya\", \"lastname\": \"Raj\", \"city\": \"Chennai\"}, {\"customer_id\": 5, \"firstname\": \"Suresh\", \"lastname\": \"Babu\", \"city\": \"Bengaluru\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Street of a specific customer",
+              "description": "Fetch the street of the customer whose customer_id is 3.\n\nReturn the column: street.",
+              "referenceNotes": "Two levels of composite access: (person).addr.street.",
+              "allowedLanguages": [
+                "postgres"
+              ],
+              "points": 4,
+              "testCases": [
+                {
+                  "label": "Customer 3 lives on Elm Rd",
+                  "input": "",
+                  "expectedOutput": "[{\"street\": \"9 Elm Rd\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Total phone contacts per customer",
+              "description": "Get the number of phone contacts held for each customer.\n\nReturn the columns: customer_id, phone_count. A customer with no phones must still appear, with a count of 0.",
+              "referenceNotes": "phones is an array column. array_length(phones, 1) returns NULL for an empty array, so wrap it in coalesce(..., 0).",
+              "allowedLanguages": [
+                "postgres"
+              ],
+              "points": 6,
+              "testCases": [
+                {
+                  "label": "Customer 5 has none",
+                  "input": "",
+                  "expectedOutput": "[{\"customer_id\": 1, \"phone_count\": 2}, {\"customer_id\": 2, \"phone_count\": 1}, {\"customer_id\": 3, \"phone_count\": 3}, {\"customer_id\": 4, \"phone_count\": 2}, {\"customer_id\": 5, \"phone_count\": 0}]"
+                }
+              ]
+            },
+            {
+              "title": "Customers living in Tamilnadu",
+              "description": "Print the first name and age of every customer whose state is 'Tamilnadu'.\n\nReturn the columns: firstname, age.",
+              "referenceNotes": "Filter on the nested composite field in the WHERE clause.",
+              "allowedLanguages": [
+                "postgres"
+              ],
+              "points": 5,
+              "testCases": [
+                {
+                  "label": "Three customers",
+                  "input": "",
+                  "expectedOutput": "[{\"firstname\": \"John\", \"age\": 23}, {\"firstname\": \"Priya\", \"age\": 20}, {\"firstname\": \"Ram\", \"age\": 21}]"
+                }
+              ]
+            },
+            {
+              "title": "Create your own object table and insert into it",
+              "description": "Create a table named CUSTOMER_2 with the columns (customer_id integer, person person_ty) and insert at least 3 rows into it, using the person_ty and address_ty types that already exist.\n\nYour script is checked by counting the rows you inserted.",
+              "referenceNotes": "Construct a composite value with ROW(...)::person_ty. The verification query runs after your script, so create the table and insert in one go.",
+              "allowedLanguages": [
+                "postgres"
+              ],
+              "points": 8,
+              "testCases": [
+                {
+                  "label": "At least three rows inserted",
+                  "input": "SELECT CASE WHEN count(*) >= 3 THEN 'ok' ELSE 'too few' END AS result FROM customer_2;",
+                  "expectedOutput": "[{\"result\": \"ok\"}]"
+                }
+              ]
+            },
+            {
+              "title": "Why object-relational?",
+              "description": "In comments at the top of your script, explain in four or five sentences what the composite type bought you over three plain columns, and one thing Oracle's VARRAY and nested tables give you that the array column here does not.\n\nThen select your roll number as a single column named roll.",
+              "referenceNotes": "Read by your teacher. No test cases.",
+              "allowedLanguages": [
+                "postgres"
+              ],
+              "points": 5,
+              "testCases": []
+            }
+          ]
+        },
+        {
+          "title": "Lab Exercise 3 - Oracle Object Types, VARRAY and REF",
+          "description": "The Oracle-specific half of the object-relational syllabus: CREATE TYPE ... AS OBJECT, VARRAY, nested tables, REF and type inheritance. This worksheet runs against the department's Oracle server, so it stays a draft until ORACLE_CONNECT_STRING is configured on the platform.",
+          "deadlineInDays": 24,
+          "status": "draft",
+          "allowLateSubmissions": true,
+          "datasetEngine": "oracle",
+          "datasetScript": "",
+          "questions": [
+            {
+              "title": "Create ADDRESS_TY and PERSON_TY object types",
+              "description": "Create an object type ADDRESS_TY with Street, City, State and Zip, and an object type PERSON_TY with Name and an ADDRESS_TY attribute. Then create a table CUSTOMER with Customer_ID and a PERSON_TY column, and insert one row.\n\nYour script is checked by counting the rows in CUSTOMER.",
+              "referenceNotes": "create or replace type ADDRESS_TY as object (...); terminate each type with a / on its own line, as in SQL*Plus.",
+              "allowedLanguages": [
+                "oracle"
+              ],
+              "points": 10,
+              "testCases": [
+                {
+                  "label": "One customer inserted",
+                  "input": "SELECT count(*) AS c FROM CUSTOMER",
+                  "expectedOutput": "[{\"C\": 1}]"
+                }
+              ]
+            },
+            {
+              "title": "Varying array of tools",
+              "description": "Create a VARRAY type TOOLS_VA holding up to 5 VARCHAR2(25) values, a table BORROWER(Name, Tools), and insert the borrower 'JED HOPKINS' with the tools HAMMER, SLEDGE and AX.\n\nYour script is checked by unnesting the array.",
+              "referenceNotes": "select B.Name, N.* from BORROWER B, TABLE(B.Tools) N;",
+              "allowedLanguages": [
+                "oracle"
+              ],
+              "points": 10,
+              "testCases": [
+                {
+                  "label": "Three tools stored",
+                  "input": "SELECT count(*) AS c FROM BORROWER B, TABLE(B.Tools) N",
+                  "expectedOutput": "[{\"C\": 3}]"
+                }
+              ]
+            },
+            {
+              "title": "Doctor and patient with REF and type inheritance",
+              "description": "Design object types for a doctor and a patient so that a patient holds a REF to their doctor, and a specialist doctor type inherits from the base doctor type using UNDER. Insert enough data to answer: find the doctor name and contact information of the patient 'Siddarth'.\n\nThis question is read by your teacher.",
+              "referenceNotes": "create type SPECIALIST_TY under DOCTOR_TY (...). Use DEREF to follow a REF.",
+              "allowedLanguages": [
+                "oracle"
+              ],
+              "points": 15,
+              "testCases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "programmeCode": "SS",
+      "subjectCode": "5SSL03",
+      "batchYear": 2023,
+      "batchSection": "A",
+      "academicYear": "2026-27",
+      "semester": 5,
+      "teachers": [
+        "meena.sundaram@psgtech.ac.in"
+      ],
+      "worksheets": [
+        {
+          "title": "Lab Exercise 1 - Arrays, Strings and Sorting",
+          "description": "Warm-up exercises in C, C++, Java and Python. Each program reads from standard input and prints to standard output exactly as the test cases show.",
+          "deadlineInDays": 7,
+          "status": "published",
+          "allowLateSubmissions": false,
+          "questions": [
+            {
+              "title": "Sum of two integers",
+              "description": "Read two integers separated by whitespace and print their sum on one line.",
+              "referenceNotes": "C: scanf(\"%d %d\", &a, &b). Python: map(int, input().split()).",
+              "allowedLanguages": [
+                "c",
+                "cpp",
+                "java",
+                "python"
+              ],
+              "points": 5,
+              "testCases": [
+                {
+                  "label": "Small positives",
+                  "input": "3 4\n",
+                  "expectedOutput": "7\n"
+                },
+                {
+                  "label": "With a negative",
+                  "input": "-10 2\n",
+                  "expectedOutput": "-8\n"
+                },
+                {
+                  "label": "Zeroes",
+                  "input": "0 0\n",
+                  "expectedOutput": "0\n"
+                }
+              ]
+            },
+            {
+              "title": "Reverse an array",
+              "description": "The first line of input is n. The second line has n space-separated integers. Print them in reverse order, space separated, on one line.",
+              "referenceNotes": "Print a single space between values and a newline at the end, with no trailing space.",
+              "allowedLanguages": [
+                "c",
+                "cpp",
+                "java",
+                "python"
+              ],
+              "points": 8,
+              "testCases": [
+                {
+                  "label": "Five elements",
+                  "input": "5\n1 2 3 4 5\n",
+                  "expectedOutput": "5 4 3 2 1\n"
+                },
+                {
+                  "label": "Single element",
+                  "input": "1\n99\n",
+                  "expectedOutput": "99\n"
+                },
+                {
+                  "label": "With negatives",
+                  "input": "4\n-1 2 -3 4\n",
+                  "expectedOutput": "4 -3 2 -1\n"
+                }
+              ]
+            },
+            {
+              "title": "Count vowels in a string",
+              "description": "Read one line of text and print the number of vowels in it. Count both upper and lower case a, e, i, o, u.",
+              "referenceNotes": "Read the whole line, including spaces. In C, fgets is safer than scanf(\"%s\").",
+              "allowedLanguages": [
+                "c",
+                "cpp",
+                "java",
+                "python"
+              ],
+              "points": 7,
+              "testCases": [
+                {
+                  "label": "Mixed case",
+                  "input": "Hello World\n",
+                  "expectedOutput": "3\n"
+                },
+                {
+                  "label": "All vowels",
+                  "input": "AEIOUaeiou\n",
+                  "expectedOutput": "10\n"
+                },
+                {
+                  "label": "No vowels",
+                  "input": "rhythm\n",
+                  "expectedOutput": "0\n"
+                }
+              ]
+            },
+            {
+              "title": "Explain your sorting choice",
+              "description": "In a comment at the top of your program, explain in three or four sentences which sorting algorithm you would use to sort one lakh integers and why. Then print your roll number on a single line.",
+              "referenceNotes": "Graded by your teacher, not by test cases.",
+              "allowedLanguages": [
+                "c",
+                "cpp",
+                "java",
+                "python"
+              ],
+              "points": 5,
+              "testCases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "programmeCode": "TCS",
+      "subjectCode": "5TCSL01",
+      "batchYear": 2023,
+      "batchSection": "A",
+      "academicYear": "2026-27",
+      "semester": 5,
+      "teachers": [
+        "karthik.iyer@psgtech.ac.in"
+      ],
+      "worksheets": []
+    },
+    {
+      "programmeCode": "DS",
+      "subjectCode": "5DSL02",
+      "batchYear": 2023,
+      "batchSection": "A",
+      "academicYear": "2026-27",
+      "semester": 5,
+      "teachers": [
+        "revathi.nair@psgtech.ac.in",
+        "anita.rao@psgtech.ac.in"
+      ],
+      "worksheets": []
+    }
+  ]
+}

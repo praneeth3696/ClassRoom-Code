@@ -1,0 +1,42 @@
+{
+  "$comment": "Template for real pilot content. Copy this file, fill it in, and load it with: npm run seed -- ./seed/your-file.json . Keys are validated strictly — a misspelled key is reported rather than silently ignored. Re-running updates in place: users match on email, the course on name+code, worksheets on title.",
+  "course": {
+    "name": "Course name as students should see it",
+    "code": "CS-L101",
+    "department": "Computer Science"
+  },
+  "teachers": [
+    { "name": "Full Name", "email": "teacher@college.edu" }
+  ],
+  "students": [
+    { "name": "Full Name", "email": "rollnumber@college.edu" }
+  ],
+  "worksheets": [
+    {
+      "title": "Worksheet 1 — Topic",
+      "description": "One or two sentences shown above the question list.",
+      "deadlineInDays": 7,
+      "status": "draft",
+      "allowLateSubmissions": false,
+      "questions": [
+        {
+          "title": "Short question title",
+          "description": "What the student must do. State the exact input format and the exact expected output.",
+          "referenceNotes": "Optional hints, textbook sections, or reminders.",
+          "allowedLanguages": ["c", "cpp", "java", "python"],
+          "points": 5,
+          "testCases": [
+            { "label": "Optional name for this case", "input": "2 3\n", "expectedOutput": "5\n" }
+          ]
+        },
+        {
+          "title": "An open-ended question",
+          "description": "Questions with no test cases are graded by the teacher alone.",
+          "allowedLanguages": ["c"],
+          "points": 5,
+          "testCases": []
+        }
+      ]
+    }
+  ]
+}

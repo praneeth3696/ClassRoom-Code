@@ -1,0 +1,33 @@
+{
+  "name": "@classroom/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "migrate": "node src/db/migrate.js",
+    "seed": "node src/db/seed.js",
+    "reset": "node src/db/reset.js",
+    "test": "NODE_ENV=test node --test \"test/**/*.test.js\"",
+    "verify": "node scripts/verify.mjs",
+    "seed:college": "node src/db/seedCollege.js",
+    "verify:college": "node scripts/verify-college.mjs",
+    "verify:solutions": "node scripts/verify-reference-solutions.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.122.0",
+    "@electric-sql/pglite": "^0.2.17",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.12.2",
+    "multer": "^2.3.0",
+    "pg": "^8.13.1",
+    "zod": "^3.24.1"
+  }
+}

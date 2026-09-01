@@ -1,0 +1,104 @@
+{
+  "$comment": "Placeholder pilot content. Replace with the real lab worksheet supplied by the department (SPEC.md §12) — the seed runner takes any file matching this shape.",
+  "course": {
+    "name": "Programming Lab I",
+    "code": "CS-L101",
+    "department": "Computer Science"
+  },
+  "teachers": [
+    { "name": "Dr. Anita Rao", "email": "anita.rao@college.edu" },
+    { "name": "Prof. Vikram Shah", "email": "vikram.shah@college.edu" }
+  ],
+  "students": [
+    { "name": "Aditya Menon", "email": "aditya.menon@college.edu" },
+    { "name": "Bhavna Iyer", "email": "bhavna.iyer@college.edu" },
+    { "name": "Chetan Kulkarni", "email": "chetan.kulkarni@college.edu" }
+  ],
+  "worksheets": [
+    {
+      "title": "Worksheet 1 — Input, Output and Conditionals",
+      "description": "Covers reading from standard input, formatted output, and branching. Write each program so it reads exactly the input shown in the test cases and prints exactly the expected output.",
+      "deadlineInDays": 7,
+      "status": "published",
+      "allowLateSubmissions": false,
+      "questions": [
+        {
+          "title": "Sum of two integers",
+          "description": "Read two integers from standard input, separated by whitespace, and print their sum on a single line.",
+          "referenceNotes": "In C use scanf(\"%d %d\", &a, &b). In Python, int(input()) reads one line at a time — input().split() may be easier here.",
+          "allowedLanguages": ["c", "cpp", "java", "python"],
+          "points": 5,
+          "testCases": [
+            { "label": "Small positives", "input": "3 4\n", "expectedOutput": "7\n" },
+            { "label": "With a negative", "input": "-10 2\n", "expectedOutput": "-8\n" },
+            { "label": "Zeroes", "input": "0 0\n", "expectedOutput": "0\n" }
+          ]
+        },
+        {
+          "title": "Largest of three numbers",
+          "description": "Read three integers on one line and print the largest of them. If several are equal to the largest value, print that value once.",
+          "referenceNotes": "Nested if-else, or the ternary operator. Do not use a sorting library — the point is the branching logic.",
+          "allowedLanguages": ["c", "cpp", "java", "python"],
+          "points": 5,
+          "testCases": [
+            { "label": "Distinct values", "input": "3 9 5\n", "expectedOutput": "9\n" },
+            { "label": "Largest first", "input": "42 7 8\n", "expectedOutput": "42\n" },
+            { "label": "All equal", "input": "6 6 6\n", "expectedOutput": "6\n" }
+          ]
+        },
+        {
+          "title": "Even or odd",
+          "description": "Read a single integer n and print the word Even if it is divisible by 2, otherwise print Odd. Match the capitalisation exactly.",
+          "referenceNotes": "The modulo operator (%) gives the remainder of a division. Watch out: in C, -3 % 2 is -1, not 1.",
+          "allowedLanguages": ["c", "cpp", "java", "python"],
+          "points": 5,
+          "testCases": [
+            { "label": "Even", "input": "4\n", "expectedOutput": "Even\n" },
+            { "label": "Odd", "input": "7\n", "expectedOutput": "Odd\n" },
+            { "label": "Negative odd", "input": "-3\n", "expectedOutput": "Odd\n" }
+          ]
+        },
+        {
+          "title": "Explain your approach",
+          "description": "In a comment at the top of your program, explain in three or four sentences how you decided which control structure to use for question 2, and what would change if the input could contain more than three numbers. Then print your name on a single line.",
+          "referenceNotes": "This question is graded by your teacher's reading of it, not by a test case.",
+          "allowedLanguages": ["c", "cpp", "java", "python"],
+          "points": 5,
+          "testCases": []
+        }
+      ]
+    },
+    {
+      "title": "Worksheet 2 — Loops and Arrays",
+      "description": "Iteration, accumulation and one-dimensional arrays.",
+      "deadlineInDays": 14,
+      "status": "draft",
+      "allowLateSubmissions": true,
+      "questions": [
+        {
+          "title": "Factorial",
+          "description": "Read a non-negative integer n (n ≤ 12) and print n! on a single line.",
+          "referenceNotes": "A simple for loop accumulating into a running product. 0! is 1.",
+          "allowedLanguages": ["c", "cpp", "java", "python"],
+          "points": 10,
+          "testCases": [
+            { "label": "Zero", "input": "0\n", "expectedOutput": "1\n" },
+            { "label": "Five", "input": "5\n", "expectedOutput": "120\n" },
+            { "label": "Twelve", "input": "12\n", "expectedOutput": "479001600\n" }
+          ]
+        },
+        {
+          "title": "Reverse an array",
+          "description": "The first line of input is n, the number of elements. The second line contains n space-separated integers. Print the same integers in reverse order, space-separated, on one line.",
+          "referenceNotes": "Read n first, then loop n times. Print a single space between values and a newline at the end — no trailing space.",
+          "allowedLanguages": ["c", "cpp", "java", "python"],
+          "points": 10,
+          "testCases": [
+            { "label": "Five elements", "input": "5\n1 2 3 4 5\n", "expectedOutput": "5 4 3 2 1\n" },
+            { "label": "Single element", "input": "1\n99\n", "expectedOutput": "99\n" }
+          ]
+        }
+      ]
+    }
+  ]
+}
