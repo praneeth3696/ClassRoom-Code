@@ -1,6 +1,6 @@
-import { many, closeDb } from '/Users/praneeth/Work/Development/GitHub/teacherstudentprod/server/src/db/index.js';
-import { runAgainstTestCases } from '/Users/praneeth/Work/Development/GitHub/teacherstudentprod/server/src/services/execution.js';
-import { shutdownEngines } from '/Users/praneeth/Work/Development/GitHub/teacherstudentprod/server/src/services/dbEngines/index.js';
+import { many, closeDb } from '../src/db/index.js';
+import { runAgainstTestCases } from '../src/services/execution.js';
+import { shutdownEngines } from '../src/services/dbEngines/index.js';
 
 // Reference solutions, keyed by question title.
 const SOLUTIONS = {
