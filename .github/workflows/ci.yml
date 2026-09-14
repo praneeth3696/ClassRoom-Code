@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  server:
+    name: Server tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    # MongoDB lab questions run through the real mongosh against a real server.
+    services:
+      mongodb:
+        image: mongo:8
+        ports:
+          - 27017:27017
+    env:
+      MONGODB_URL: mongodb://localhost:27017
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - name: Install mongosh
+        # A fresh runner has no mongosh config; without disabling telemetry first,
+        # every --eval fails with "Telemetry setup is missing userId or anonymousId".
+        run: |
+          npm install -g mongosh@2.9.2
+          mongosh --nodb --quiet --eval "disableTelemetry()"
+      - run: npm ci
+      - run: npm test
+
+  web:
+    name: Web build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build
