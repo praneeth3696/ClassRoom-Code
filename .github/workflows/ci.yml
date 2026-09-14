@@ -31,7 +31,11 @@ jobs:
           cache: npm
           cache-dependency-path: server/package-lock.json
       - name: Install mongosh
-        run: npm install -g mongosh
+        # A fresh runner has no mongosh config; without disabling telemetry first,
+        # every --eval fails with "Telemetry setup is missing userId or anonymousId".
+        run: |
+          npm install -g mongosh@2.9.2
+          mongosh --nodb --quiet --eval "disableTelemetry()"
       - run: npm ci
       - run: npm test
 
