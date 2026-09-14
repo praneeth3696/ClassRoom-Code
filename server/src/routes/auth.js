@@ -12,6 +12,22 @@ import { requireAuth } from '../middleware/auth.js';
 
 export const authRouter = Router();
 
+/**
+ * The page to return to after sign-in. Only same-origin paths are accepted:
+ * `//evil.example` and `/\evil.example` both start with a slash but resolve to
+ * another host, which would turn a sign-in link into an open redirect.
+ */
+export function safeNextPath(value) {
+  if (typeof value !== 'string' || !value.startsWith('/')) return '/';
+  const webOrigin = new URL(config.webOrigin);
+  try {
+    if (new URL(value, webOrigin).origin !== webOrigin.origin) return '/';
+  } catch {
+    return '/';
+  }
+  return value;
+}
+
 authRouter.get('/me', (req, res) => {
   res.json({ user: req.user ?? null });
 });
@@ -32,7 +48,7 @@ authRouter.get(
     const state = crypto.randomBytes(24).toString('base64url');
     const nonce = crypto.randomBytes(24).toString('base64url');
     // `next` lets the frontend resume the page the user was heading for.
-    const next = typeof req.query.next === 'string' && req.query.next.startsWith('/') ? req.query.next : '/';
+    const next = safeNextPath(req.query.next);
     setOAuthCookie(res, { state, nonce, next });
     res.redirect(await buildAuthUrl({ state, nonce }));
   }),
@@ -63,7 +79,7 @@ authRouter.get(
       const profile = await completeSignIn(String(req.query.code), pending.nonce);
       const user = await upsertGoogleUser(profile);
       setSessionCookie(res, user);
-      res.redirect(new URL(pending.next || '/', config.webOrigin).toString());
+      res.redirect(new URL(safeNextPath(pending.next), config.webOrigin).toString());
     } catch (err) {
       return fail(err.status && err.status < 500 ? err.message : 'Sign-in failed. Please try again.');
     }

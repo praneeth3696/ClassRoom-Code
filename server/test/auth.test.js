@@ -7,6 +7,7 @@ import { signSession, verifySession } from '../src/lib/session.js';
 import { assertAllowedEmail, emailDomain, initialRoleFor, upsertGoogleUser, findUserByEmail } from '../src/services/users.js';
 import { requireRole, requireAuth } from '../src/middleware/auth.js';
 import { createApp } from '../src/app.js';
+import { safeNextPath } from '../src/routes/auth.js';
 
 let server;
 let base;
@@ -82,6 +83,33 @@ describe('role assignment', () => {
     assert.equal(initialRoleFor('boss@college.edu'), 'teacher');
     assert.equal(initialRoleFor('BOSS@college.edu'), 'teacher');
     assert.equal(initialRoleFor('someone@college.edu'), 'student');
+  });
+});
+
+describe('post-sign-in redirect target', () => {
+  test('keeps a same-site path, including its query and hash', () => {
+    assert.equal(safeNextPath('/'), '/');
+    assert.equal(safeNextPath('/courses/42?tab=roster#top'), '/courses/42?tab=roster#top');
+  });
+
+  test('refuses anything that would leave the web origin', () => {
+    const offsite = [
+      '//evil.example',
+      '//evil.example/courses',
+      '/\\evil.example',
+      '/\t/evil.example',
+      'https://evil.example',
+      'evil.example',
+    ];
+    for (const value of offsite) {
+      assert.equal(safeNextPath(value), '/', `accepted ${JSON.stringify(value)}`);
+      assert.equal(new URL(safeNextPath(value), config.webOrigin).origin, new URL(config.webOrigin).origin);
+    }
+  });
+
+  test('falls back to the home page for non-string input', () => {
+    assert.equal(safeNextPath(undefined), '/');
+    assert.equal(safeNextPath(['/courses']), '/');
   });
 });
 
