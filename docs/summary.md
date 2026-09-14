@@ -1,7 +1,7 @@
 # Classroom Code Platform — Portfolio Readiness Summary
 
 Branch `chore/portfolio-readiness` off `main` @ `a828ed5`. Full audit and rationale in
-[IMPROVEMENT_PLAN.md](IMPROVEMENT_PLAN.md).
+[improvement-plan.md](improvement-plan.md).
 
 This was already the strongest repository audited: strict validation, production config guards,
 404-not-403 authorization, and 191 passing tests. Changes were deliberately few.
@@ -38,14 +38,14 @@ they need a live server with seeded data.
    (which spends API credits). Limits depend on lab size behind a shared NAT IP.
 4. **LICENSE** — none present.
 
-Details and options for each are in IMPROVEMENT_PLAN.md.
+Details and options for each are in improvement-plan.md.
 
 ---
 
 # Round 2 — hardening
 
 Branch `improve/classroom-hardening`, stacked on `chore/portfolio-readiness`. Findings and plan are
-in the "Round 2" section of IMPROVEMENT_PLAN.md.
+in the "Round 2" section of [improvement-plan.md](improvement-plan.md).
 
 ## What changed and why
 
