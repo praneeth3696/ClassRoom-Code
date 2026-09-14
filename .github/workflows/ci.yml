@@ -15,6 +15,14 @@ jobs:
     defaults:
       run:
         working-directory: server
+    # MongoDB lab questions run through the real mongosh against a real server.
+    services:
+      mongodb:
+        image: mongo:8
+        ports:
+          - 27017:27017
+    env:
+      MONGODB_URL: mongodb://localhost:27017
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,6 +30,8 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: server/package-lock.json
+      - name: Install mongosh
+        run: npm install -g mongosh
       - run: npm ci
       - run: npm test
 
