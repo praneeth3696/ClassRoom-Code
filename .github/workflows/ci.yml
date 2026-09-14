@@ -40,7 +40,7 @@ jobs:
       - run: npm test
 
   web:
-    name: Web build
+    name: Web lint, tests and build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -53,4 +53,38 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
+      - run: npm run lint
+      - run: npm test
       - run: npm run build
+
+  e2e:
+    name: End-to-end (Chromium)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            web/package-lock.json
+      - name: Install server dependencies
+        run: npm ci
+        working-directory: server
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: web
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: web
+      - name: Build and run end-to-end tests
+        run: npm run e2e
+        working-directory: web
+      - name: Keep traces of failed runs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: web/test-results
+          retention-days: 7
