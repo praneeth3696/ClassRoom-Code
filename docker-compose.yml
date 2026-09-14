@@ -1,0 +1,55 @@
+# A production-style stack: the platform and PostgreSQL.
+#
+# Settings come from your shell or a .env file next to this one. The server
+# refuses to boot insecurely under NODE_ENV=production, so the values it needs
+# are required here too - compose stops and names any that are missing:
+#
+#   POSTGRES_PASSWORD=...  JWT_SECRET=...  PUBLIC_ORIGIN=https://labs.example.edu
+#   GOOGLE_CLIENT_ID=...   GOOGLE_CLIENT_SECRET=...
+#
+#   docker compose up -d --build
+#
+# Code execution needs a Judge0 instance on its own VM (JUDGE0_URL); MongoDB
+# questions need MONGODB_URL and are not runnable from this image alone.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: classroom
+      POSTGRES_USER: classroom
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U classroom -d classroom"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PORT:-4000}:4000"
+    environment:
+      DATABASE_URL: postgres://classroom:${POSTGRES_PASSWORD}@db:5432/classroom
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET to a long random string}
+      WEB_ORIGIN: ${PUBLIC_ORIGIN:?set PUBLIC_ORIGIN, the address users open, e.g. https://labs.example.edu}
+      API_ORIGIN: ${PUBLIC_ORIGIN}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:?set GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:?set GOOGLE_CLIENT_SECRET}
+      ALLOWED_EMAIL_DOMAINS: ${ALLOWED_EMAIL_DOMAINS:-}
+      TEACHER_EMAILS: ${TEACHER_EMAILS:-}
+      JUDGE0_URL: ${JUDGE0_URL:-}
+      JUDGE0_AUTH_TOKEN: ${JUDGE0_AUTH_TOKEN:-}
+      MONGODB_URL: ${MONGODB_URL:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      EXECUTION_CONCURRENCY: ${EXECUTION_CONCURRENCY:-8}
+    restart: unless-stopped
+
+volumes:
+  pgdata:
