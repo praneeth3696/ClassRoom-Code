@@ -81,8 +81,11 @@ file passed on its own and in the next five full runs, and I did not capture the
 is unknown — most likely its `before()` hook timing out under parallel load. If CI ever shows it, the
 log will carry the real message.
 
-**Not verified on this machine:** the container image, because Docker is not installed here. The CI
-`docker` job builds it and boots it in production mode against PostgreSQL.
+**CI:** all four jobs pass — server tests, web lint/tests/build, Playwright, and the container job,
+which builds the image and boots it in production mode against PostgreSQL (Docker is not installed on
+the machine this was written on, so CI is where the image is verified). The first CI run caught two
+tests that awaited deliberately unref'd timers: on Node 22 the test process could exit before they
+fired. Reproduced on Node 22 and fixed in the tests; the production code was correct.
 
 ## Deferred — needs your input (round 2)
 
