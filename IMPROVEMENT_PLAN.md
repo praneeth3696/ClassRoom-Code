@@ -63,3 +63,49 @@ config assertions, 404-not-403 authorization, and a real test suite.
   `helmet` with a CSP that allows the bundled Monaco workers. Limits are a product decision (lab of 60
   students behind one NAT IP).
 - **LICENSE (#7).**
+
+---
+
+# Round 2 — deeper hardening (branch `improve/classroom-hardening`)
+
+A second, code-level audit of the server and web app found problems the first pass did not
+reach. Ranked the same way.
+
+## New findings
+
+8. **Run and Save Draft rewrite a submitted answer.** The Run upsert overwrote `code`,
+   `last_run_result` and `auto_passed` on an already-submitted row, and Save Draft overwrote `code`
+   while leaving `status = 'submitted'`. So after submitting, any experiment silently changed what
+   the teacher grades — even after the deadline, because Run is allowed then. Only the latest
+   revision existed, so the graded answer could not be recovered.
+9. **No submission history** (SPEC.md §13) and the late flag was returned but never stored.
+10. **`scripts/verify-reference-solutions.mjs` imports from absolute paths on the author's machine**,
+    so it cannot run anywhere else.
+11. **Shutdown leaks the managed `mongod`.** `SIGTERM` closed the HTTP server but never called
+    `shutdownEngines()`, and `server.close()` could hang on keep-alive connections.
+12. **No execution concurrency limit.** QUESTIONS.md measured 60 simultaneous runs needing ~2 GB and
+    recommended a queue of ~10; nothing bounds it.
+13. **No rate limiting** on code execution, submissions, dev sign-in, or the AI import (which spends
+    API credits).
+14. **No security headers** (clickjacking, MIME sniffing, CSP).
+15. **Teachers cannot spot identical submissions** (QUESTIONS.md #4) or **export results** (#10).
+16. **The frontend has no tests and neither package is linted.**
+17. **`react-router-dom` 6** carries a moderate advisory.
+18. **No container image**, although deployment onto college infrastructure is the remaining §13 item.
+
+## Round 2 plan
+
+| # | Change | Impact | Effort | Decision |
+|---|---|---|---|---|
+| 10 | Relative imports in the verification script | Medium | S | **Implement** |
+| 11 | Graceful shutdown stops database engines, with a forced-exit timeout | Medium | S | **Implement** |
+| 8, 9 | Submission revisions: Run/Save touch only the working copy; each Submit is an immutable revision with its result and late flag; review shows the graded revision and history | High | L | **Implement** |
+| 12 | Bounded execution queue (`EXECUTION_CONCURRENCY`) | High | M | **Implement** |
+| 13 | Per-user / per-IP rate limits on execution, submission, sign-in, import | High | M | **Implement** |
+| 14 | Security headers with a CSP verified against Monaco in a real browser | Medium | M | **Implement** |
+| 15 | Identical-submission flag on the review screen; CSV export of a worksheet's results | Medium | M | **Implement** |
+| 16 | ESLint for server and web; Vitest for the web app | Medium | M | **Implement** |
+| 17 | React Router 7 | Medium | S | **Implement** (verified by tests, build and a browser smoke test) |
+| 18 | Dockerfile + compose (app + PostgreSQL), built in CI | Medium | M | **Implement** |
+| — | Publish gate on reference solutions | High | L | Deferred — questions do not store reference solutions yet; needs a schema and editor design decision |
+| 5, 7 | Seed-data privacy, LICENSE | — | — | Still yours to decide |
