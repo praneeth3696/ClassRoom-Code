@@ -8,6 +8,7 @@ import {
   loadSubmissionContext, upsertFeedback, worksheetProgress,
 } from '../services/review.js';
 import { listRevisions } from '../services/revisions.js';
+import { exportWorksheetCsv } from '../services/exports.js';
 
 export const reviewRouter = Router();
 export const feedbackRouter = Router();
@@ -37,6 +38,26 @@ reviewRouter.get(
     const worksheet = await loadWorksheetCourse(uuid.parse(req.params.worksheetId));
     await assertCanViewWorksheet(req.user, worksheet);
     res.json(await worksheetProgress(worksheet.id, req.user));
+  }),
+);
+
+/** A worksheet's results as a CSV attachment, for the department's marks sheet. */
+reviewRouter.get(
+  '/worksheets/:worksheetId/export.csv',
+  requireAuth,
+  requireTeacher,
+  wrap(async (req, res) => {
+    const worksheet = await loadWorksheetCourse(uuid.parse(req.params.worksheetId));
+    await assertCanTeachCourse(req.user, worksheet.course_id);
+    const { filename, csv } = await exportWorksheetCsv(worksheet.id);
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+    );
+    // Marks are personal data; do not leave copies in shared caches.
+    res.setHeader('Cache-Control', 'no-store');
+    res.send(csv);
   }),
 );
 

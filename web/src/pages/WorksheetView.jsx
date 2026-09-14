@@ -113,6 +113,7 @@ export default function WorksheetView() {
         </div>
         {isTeacher && (
           <div className="btn-row">
+            <a className="btn" href={`/api/worksheets/${worksheetId}/export.csv`} download>Export CSV</a>
             <Link className="btn" to={`/worksheets/${worksheetId}/edit`}>Edit</Link>
             <button className="btn primary" onClick={togglePublish} disabled={busy}>
               {worksheet.status === 'published' ? 'Unpublish' : 'Publish'}
