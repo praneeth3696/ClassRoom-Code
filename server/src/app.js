@@ -20,11 +20,14 @@ import { submissionsRouter } from './routes/submissions.js';
 import { feedbackRouter, reviewRouter } from './routes/review.js';
 import { courseImportsRouter, importsRouter } from './routes/imports.js';
 import { errorHandler, notFoundHandler } from './middleware/errors.js';
+import { securityHeaders } from './middleware/securityHeaders.js';
 
 export function createApp() {
   const app = express();
 
   app.set('trust proxy', 1);
+  app.disable('x-powered-by');
+  app.use(securityHeaders({ production: config.env === 'production' }));
   app.use(express.json({ limit: '1mb' }));
   app.use(cookieParser());
   app.use(
