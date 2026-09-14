@@ -6,7 +6,7 @@ import cors from 'cors';
 import { config, SERVER_ROOT } from './config.js';
 import { describeDb, query } from './db/index.js';
 import { publicLanguages } from './lib/languages.js';
-import { chooseExecutor } from './services/execution.js';
+import { chooseExecutor, executionQueueStats } from './services/execution.js';
 import { judge0Status } from './services/judge0.js';
 import { engineAvailability } from './services/dbEngines/index.js';
 import { isConfigured as aiConfigured } from './services/worksheetDraft.js';
@@ -50,6 +50,7 @@ export function createApp() {
           judge0: req.query.deep === 'true' ? await judge0Status() : { configured: Boolean(config.judge0.url) },
           localFallback: config.judge0.allowLocalFallback,
           databases: await engineAvailability(),
+          queue: executionQueueStats(),
         },
         import: { available: aiConfigured(), model: config.ai.model },
         time: new Date().toISOString(),

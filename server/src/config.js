@@ -88,6 +88,14 @@ export const config = {
     wallTimeLimit: Number(process.env.JUDGE0_WALL_LIMIT || 10),
     memoryLimitKb: Number(process.env.JUDGE0_MEMORY_KB || 256000),
   },
+
+  execution: {
+    // How many Runs/Submits execute at once; the rest queue. Each database run
+    // starts its own engine, so this bounds memory during a full lab session.
+    concurrency: Number(process.env.EXECUTION_CONCURRENCY || 8),
+    maxQueue: Number(process.env.EXECUTION_QUEUE_LIMIT || 200),
+    queueTimeoutMs: Number(process.env.EXECUTION_QUEUE_TIMEOUT_MS || 60_000),
+  },
 };
 
 export function assertProductionConfig() {
