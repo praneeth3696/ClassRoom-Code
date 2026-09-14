@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { parseBody, wrap } from '../lib/http.js';
+import { notFound, parseBody, wrap } from '../lib/http.js';
 import { requireAuth, requireTeacher } from '../middleware/auth.js';
 import { assertCanTeachCourse, assertCanViewWorksheet, loadQuestionContext, loadWorksheetCourse } from '../services/access.js';
 import {
   deleteFeedback, listMissingStudents, listQuestionSubmissions,
   loadSubmissionContext, upsertFeedback, worksheetProgress,
 } from '../services/review.js';
+import { listRevisions } from '../services/revisions.js';
 
 export const reviewRouter = Router();
 export const feedbackRouter = Router();
@@ -81,6 +82,25 @@ feedbackRouter.put(
       maxPoints: context.points === null ? null : Number(context.points),
     });
     res.json({ feedback });
+  }),
+);
+
+/**
+ * Every submitted revision of a submission (SPEC.md §13), newest first. The
+ * student who owns it and the course's teachers may read it; anyone else gets
+ * a 404, as elsewhere, so the submission's existence is not confirmed.
+ */
+feedbackRouter.get(
+  '/:submissionId/revisions',
+  requireAuth,
+  wrap(async (req, res) => {
+    const context = await loadSubmissionContext(uuid.parse(req.params.submissionId));
+    if (req.user.role === 'student') {
+      if (context.student_id !== req.user.id) throw notFound('Submission not found');
+    } else {
+      await assertCanTeachCourse(req.user, context.course_id);
+    }
+    res.json({ revisions: await listRevisions(context.id) });
   }),
 );
 

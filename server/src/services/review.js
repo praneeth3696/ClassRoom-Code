@@ -1,48 +1,53 @@
 import { many, one } from '../db/index.js';
 import { badRequest, notFound } from '../lib/http.js';
 import { isAdmin, teachesCourse } from './access.js';
+import {
+  LATEST_REVISION_COLUMNS, LATEST_REVISION_JOIN, revisionCountOf, shapeFeedback, shapeLatestRevision,
+} from './revisions.js';
 
 /**
  * Teacher-side review of submissions, and the progress summaries both roles
  * need (SPEC.md §7.4, §8.5).
  */
 
-function shapeFeedback(row) {
-  if (!row || !row.feedback_id) return null;
-  return {
-    id: row.feedback_id,
-    comment: row.comment ?? null,
-    marks: row.marks === null || row.marks === undefined ? null : Number(row.marks),
-    teacherName: row.teacher_name ?? null,
-    updatedAt: row.feedback_updated_at,
-  };
-}
-
 const SUBMISSION_SELECT = `
   s.id, s.question_id, s.student_id, s.code, s.language, s.status,
   s.auto_passed, s.last_run_result, s.submitted_at, s.updated_at,
+  ${LATEST_REVISION_COLUMNS},
   u.name AS student_name, u.email AS student_email,
-  f.id AS feedback_id, f.comment, f.marks, f.updated_at AS feedback_updated_at,
-  t.name AS teacher_name`;
+  f.id AS feedback_id, f.comment, f.marks, f.revision AS feedback_revision,
+  f.updated_at AS feedback_updated_at, t.name AS teacher_name`;
 
 const SUBMISSION_JOINS = `
   FROM submissions s
+  ${LATEST_REVISION_JOIN}
   JOIN users u ON u.id = s.student_id
   LEFT JOIN feedback f ON f.submission_id = s.id
   LEFT JOIN users t ON t.id = f.teacher_id`;
 
+/**
+ * A submission as the teacher reviews it. Once the student has submitted, the
+ * code and automated result are those of the latest revision — never the
+ * student's later, unsubmitted edits. A student who has only run or saved shows
+ * as a draft with their working copy.
+ */
 function shapeSubmissionRow(row, { includeCode = true } = {}) {
+  const graded = shapeLatestRevision(row);
   return {
     id: row.id,
     questionId: row.question_id,
     student: { id: row.student_id, name: row.student_name, email: row.student_email },
-    code: includeCode ? row.code : undefined,
-    language: row.language,
+    code: includeCode ? (graded ? graded.code : row.code) : undefined,
+    language: graded ? graded.language : row.language,
     status: row.status,
-    autoPassed: row.auto_passed,
-    lastRunResult: row.last_run_result ?? null,
-    submittedAt: row.submitted_at ?? null,
+    autoPassed: graded ? graded.autoPassed : row.auto_passed,
+    lastRunResult: graded ? graded.result : (row.last_run_result ?? null),
+    submittedAt: graded?.submittedAt ?? row.submitted_at ?? null,
     updatedAt: row.updated_at,
+    revision: graded?.revision ?? null,
+    revisionCount: revisionCountOf(row),
+    late: graded?.late ?? false,
+    hasUnsubmittedChanges: Boolean(graded) && (row.code !== graded.code || row.language !== graded.language),
     feedback: shapeFeedback(row),
   };
 }
@@ -95,10 +100,11 @@ export async function worksheetProgress(worksheetId, user) {
 
   if (!isTeacher) {
     const mine = await many(
-      `SELECT s.question_id, s.status, s.auto_passed, s.updated_at,
-              f.id AS feedback_id, f.comment, f.marks, f.updated_at AS feedback_updated_at,
-              t.name AS teacher_name
+      `SELECT s.question_id, s.status, s.auto_passed, s.updated_at, ${LATEST_REVISION_COLUMNS},
+              f.id AS feedback_id, f.comment, f.marks, f.revision AS feedback_revision,
+              f.updated_at AS feedback_updated_at, t.name AS teacher_name
        FROM submissions s
+       ${LATEST_REVISION_JOIN}
        LEFT JOIN feedback f ON f.submission_id = s.id
        LEFT JOIN users t ON t.id = f.teacher_id
        WHERE s.question_id = ANY($1) AND s.student_id = $2`,
@@ -119,6 +125,8 @@ export async function worksheetProgress(worksheetId, user) {
                 status: row.status,
                 autoPassed: row.auto_passed,
                 updatedAt: row.updated_at,
+                revisionCount: revisionCountOf(row),
+                late: Boolean(row.rev_late),
                 feedback: shapeFeedback(row),
               }
             : null,
@@ -185,8 +193,8 @@ export async function loadSubmissionContext(submissionId) {
 
 /**
  * Saves the teacher's feedback (SPEC.md §6, §9). One feedback row per
- * submission — editing replaces it rather than appending, matching the
- * "latest revision only" model.
+ * submission — editing replaces it rather than appending. It records the
+ * revision it was written against, so a later resubmission shows as new work.
  */
 export async function upsertFeedback({ submissionId, teacherId, comment, marks, maxPoints }) {
   if (marks !== null && marks !== undefined && maxPoints !== null && maxPoints !== undefined) {
@@ -195,20 +203,23 @@ export async function upsertFeedback({ submissionId, teacherId, comment, marks, 
     }
   }
   const row = await one(
-    `INSERT INTO feedback (submission_id, teacher_id, comment, marks)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO feedback (submission_id, teacher_id, comment, marks, revision)
+     VALUES ($1, $2, $3, $4, (SELECT max(revision) FROM submission_revisions WHERE submission_id = $1))
      ON CONFLICT (submission_id) DO UPDATE
        SET teacher_id = EXCLUDED.teacher_id,
            comment = EXCLUDED.comment,
            marks = EXCLUDED.marks,
+           revision = EXCLUDED.revision,
            updated_at = now()
-     RETURNING id, comment, marks, updated_at`,
+     RETURNING id, comment, marks, revision, updated_at`,
     [submissionId, teacherId, comment ?? null, marks ?? null],
   );
   return {
     id: row.id,
     comment: row.comment ?? null,
     marks: row.marks === null ? null : Number(row.marks),
+    revision: row.revision ?? null,
+    outdated: false,
     updatedAt: row.updated_at,
   };
 }

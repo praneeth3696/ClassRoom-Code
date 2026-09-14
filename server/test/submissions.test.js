@@ -117,7 +117,7 @@ describe('submitting (SPEC.md §8.4)', () => {
     assert.equal(submitted.body.submission.code, PY_WRONG);
   });
 
-  test('a submission stays revisable and overwrites in place', async () => {
+  test('a submission stays revisable: one working copy, one revision per submit', async () => {
     const fixed = await api.post(`/api/questions/${questionId}/submit`, { code: PY_SUM, language: 'python' }, { cookie: studentB });
     assert.equal(fixed.body.submission.autoPassed, true);
 
@@ -125,7 +125,8 @@ describe('submitting (SPEC.md §8.4)', () => {
       'SELECT count(*)::int AS n FROM submissions WHERE question_id = $1 AND student_id = $2',
       [questionId, fixed.body.submission.studentId],
     );
-    assert.equal(rows[0].n, 1, 'only the latest revision is kept (SPEC.md §13)');
+    assert.equal(rows[0].n, 1, 'one submission row per student per question');
+    assert.equal(fixed.body.submission.revisionCount, 2, 'both submits are kept as revisions (SPEC.md §13)');
   });
 
   test('an ungraded question records no automated pass', async () => {
