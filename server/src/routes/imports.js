@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { config } from '../config.js';
 import { parseBody, wrap, badRequest } from '../lib/http.js';
 import { requireAuth, requireTeacher } from '../middleware/auth.js';
+import { limits } from '../middleware/rateLimit.js';
 import { assertCanTeachCourse } from '../services/access.js';
 import {
   analyzeImport, applyImport, createImport, getImport,
@@ -60,6 +61,7 @@ courseImportsRouter.post(
   '/',
   requireAuth,
   requireTeacher,
+  limits.imports,
   handleUpload,
   wrap(async (req, res) => {
     const courseId = uuid.parse(req.params.courseId);
@@ -95,6 +97,7 @@ importsRouter.post(
   '/:importId/analyze',
   requireAuth,
   requireTeacher,
+  limits.imports,
   wrap(async (req, res) => {
     await assertCanEditImport(req);
     const body = parseBody(analyzeSchema, req.body ?? {});
@@ -118,6 +121,7 @@ importsRouter.post(
   '/:importId/recheck',
   requireAuth,
   requireTeacher,
+  limits.imports,
   wrap(async (req, res) => {
     await assertCanEditImport(req);
     res.json({ import: await resolveDraft(req.params.importId) });

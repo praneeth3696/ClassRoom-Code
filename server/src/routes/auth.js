@@ -9,6 +9,7 @@ import {
 import { buildAuthUrl, completeSignIn, isGoogleConfigured, redirectUri } from '../services/google.js';
 import { findUserByEmail, listUsers, toPublicUser, upsertGoogleUser } from '../services/users.js';
 import { requireAuth } from '../middleware/auth.js';
+import { limits } from '../middleware/rateLimit.js';
 
 export const authRouter = Router();
 
@@ -41,6 +42,7 @@ authRouter.post('/logout', (req, res) => {
 
 authRouter.get(
   '/google/start',
+  limits.signIns,
   wrap(async (req, res) => {
     if (!isGoogleConfigured()) {
       throw badRequest('Google sign-in is not configured on this server (set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET)');
@@ -97,6 +99,7 @@ const devLoginSchema = z.object({ email: z.string().email() });
  */
 authRouter.post(
   '/dev-login',
+  limits.signIns,
   wrap(async (req, res) => {
     if (!config.auth.devLogin) throw forbidden('Development sign-in is disabled on this server');
     const { email } = parseBody(devLoginSchema, req.body);

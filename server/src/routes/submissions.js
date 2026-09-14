@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { parseBody, wrap } from '../lib/http.js';
 import { requireAuth } from '../middleware/auth.js';
+import { limits } from '../middleware/rateLimit.js';
 import { LANGUAGE_IDS } from '../lib/languages.js';
 import { assertStudentMayAttempt, getSubmission, loadTestCases, runCode, saveDraft, submitAnswer } from '../services/submissions.js';
 import { one } from '../db/index.js';
@@ -84,6 +85,7 @@ submissionsRouter.get(
 /** Self-check: run against the visible test cases without submitting (§8.3). */
 submissionsRouter.post(
   '/:questionId/run',
+  limits.runs,
   wrap(async (req, res) => {
     const questionId = uuid.parse(req.params.questionId);
     const { code, language } = parseBody(codeSchema, req.body);
@@ -105,6 +107,7 @@ submissionsRouter.put(
 /** Submit, or re-submit a revision (§8.4). */
 submissionsRouter.post(
   '/:questionId/submit',
+  limits.submits,
   wrap(async (req, res) => {
     const questionId = uuid.parse(req.params.questionId);
     const { code, language } = parseBody(codeSchema, req.body);

@@ -96,6 +96,15 @@ export const config = {
     maxQueue: Number(process.env.EXECUTION_QUEUE_LIMIT || 200),
     queueTimeoutMs: Number(process.env.EXECUTION_QUEUE_TIMEOUT_MS || 60_000),
   },
+
+  rateLimit: {
+    // Off under NODE_ENV=test so the suite is not throttled.
+    enabled: bool(process.env.RATE_LIMIT_ENABLED, (process.env.NODE_ENV || 'development') !== 'test'),
+    runsPerMinute: Number(process.env.RATE_LIMIT_RUNS_PER_MINUTE || 60),
+    submitsPerMinute: Number(process.env.RATE_LIMIT_SUBMITS_PER_MINUTE || 20),
+    signInsPerMinute: Number(process.env.RATE_LIMIT_SIGNINS_PER_MINUTE || 30),
+    importsPerHour: Number(process.env.RATE_LIMIT_IMPORTS_PER_HOUR || 30),
+  },
 };
 
 export function assertProductionConfig() {
