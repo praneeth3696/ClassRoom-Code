@@ -40,7 +40,7 @@ jobs:
       - run: npm test
 
   web:
-    name: Web build
+    name: Web lint, tests and build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -53,4 +53,80 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
+      - run: npm run lint
+      - run: npm test
       - run: npm run build
+
+  e2e:
+    name: End-to-end (Chromium)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            web/package-lock.json
+      - name: Install server dependencies
+        run: npm ci
+        working-directory: server
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: web
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: web
+      - name: Build and run end-to-end tests
+        run: npm run e2e
+        working-directory: web
+      - name: Keep traces of failed runs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: web/test-results
+          retention-days: 7
+
+  docker:
+    name: Container image (production smoke test)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker build -t classroom-code .
+      - name: Start it in production mode against PostgreSQL
+        run: |
+          docker run -d --name app --network host \
+            -e DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres \
+            -e JWT_SECRET=ci-only-not-a-real-secret-0123456789 \
+            -e GOOGLE_CLIENT_ID=ci-placeholder \
+            -e GOOGLE_CLIENT_SECRET=ci-placeholder \
+            -e WEB_ORIGIN=http://127.0.0.1:4000 \
+            -e API_ORIGIN=http://127.0.0.1:4000 \
+            classroom-code
+      - name: Check health, migrations and the served frontend
+        run: |
+          for i in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:4000/api/health > health.json && break
+            sleep 2
+          done
+          cat health.json
+          node -e "const h = require('./health.json'); if (!h.ok || h.db.driver !== 'pg' || h.db.migrations < 4) process.exit(1)"
+          curl -fsS http://127.0.0.1:4000/ | grep -q 'id="root"'
+      - name: Container logs
+        if: always()
+        run: docker logs app

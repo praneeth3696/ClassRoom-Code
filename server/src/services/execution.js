@@ -4,6 +4,20 @@ import { runBatchLocally } from './localRunner.js';
 import { runDatabaseQuestion } from './dbJudge.js';
 import { getLanguage, isDatabaseLanguage } from '../lib/languages.js';
 import { HttpError } from '../lib/http.js';
+import { createLimiter } from '../lib/limiter.js';
+
+// Every Run and Submit goes through one bounded queue, whichever engine runs it.
+const executionLimiter = createLimiter({
+  name: 'execution',
+  concurrency: config.execution.concurrency,
+  maxQueue: config.execution.maxQueue,
+  queueTimeoutMs: config.execution.queueTimeoutMs,
+});
+
+/** Live queue figures for /api/health. */
+export function executionQueueStats() {
+  return executionLimiter.stats();
+}
 
 /**
  * Chooses an executor and turns raw execution output into a verdict.
@@ -110,13 +124,17 @@ async function execute({ code, language, inputs }) {
  * student can see their program's output; it simply has nothing to compare
  * against and is left for the teacher to judge (SPEC.md §7, §9).
  */
-export async function runAgainstTestCases({
-  code, language, testCases, datasetScript = null, setupScript = null, ordered = false,
-}) {
-  if (!String(code ?? '').trim()) {
+export async function runAgainstTestCases(options) {
+  // Refuse empty code before queueing, so a validation error never waits.
+  if (!String(options.code ?? '').trim()) {
     throw new HttpError(400, 'There is no code to run.');
   }
+  return executionLimiter.run(() => judge(options));
+}
 
+async function judge({
+  code, language, testCases, datasetScript = null, setupScript = null, ordered = false,
+}) {
   // Database answers are judged on the rows they return, not on stdout, so
   // they take a different path entirely.
   if (isDatabaseLanguage(language)) {

@@ -291,8 +291,9 @@ describe('the import API', () => {
   });
 
   test('a real .docx lab sheet extracts if one is available', async (t) => {
-    const sheet = '/Users/praneeth/Work/Academic/PSG/SEM5/SS-BIG DATA/LAB ASSIGNMENTS/Lab Exercise-1_Mongo DB.docx';
-    if (!fs.existsSync(sheet)) return t.skip('lab sheet not present on this machine');
+    // Point LAB_SHEET_DOCX at a real MongoDB lab sheet to exercise extraction on it.
+    const sheet = process.env.LAB_SHEET_DOCX;
+    if (!sheet || !fs.existsSync(sheet)) return t.skip('set LAB_SHEET_DOCX to a real lab sheet to run this');
 
     const form = new FormData();
     form.append('file', new Blob([fs.readFileSync(sheet)]), path.basename(sheet));

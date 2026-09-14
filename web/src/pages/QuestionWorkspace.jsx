@@ -85,13 +85,30 @@ export default function QuestionWorkspace() {
     setSubmitting(true);
     return act(() => api.submitAnswer(questionId, { code, language }), (res) => {
       setResult(res.result);
-      setData((d) => ({ ...d, submission: { ...res.submission, feedback: d.submission?.feedback ?? null } }));
-      setStatus(res.late ? 'Submitted — after the deadline.' : 'Submitted.');
+      setData((d) => ({ ...d, submission: res.submission }));
+      const revision = res.submission.submitted.revision;
+      setStatus(res.late
+        ? `Submitted as revision ${revision} — after the deadline.`
+        : `Submitted as revision ${revision}.`);
     }).finally(() => setSubmitting(false));
   };
 
   const saveDraft = () =>
-    act(() => api.saveDraft(questionId, { code, language }), () => setStatus('Draft saved.'));
+    act(() => api.saveDraft(questionId, { code, language }), (res) => {
+      setData((d) => ({ ...d, submission: res.submission }));
+      setStatus('Draft saved.');
+    });
+
+  const submitted = submission?.submitted ?? null;
+  // What the teacher sees is the submitted revision, not the editor, so say so
+  // whenever the two differ.
+  const unsubmittedChanges = Boolean(submitted) && (code !== submitted.code || language !== submitted.language);
+
+  const restoreSubmitted = () => {
+    setLanguage(submitted.language);
+    setCode(submitted.code);
+    setStatus(`Restored revision ${submitted.revision}.`);
+  };
 
   const busy = running || submitting;
 
@@ -196,6 +213,13 @@ export default function QuestionWorkspace() {
               {submission.feedback.comment && (
                 <div style={{ whiteSpace: 'pre-wrap', marginTop: 8 }}>{submission.feedback.comment}</div>
               )}
+              {submission.feedback.revision != null && (
+                <div className={`small ${submission.feedback.outdated ? '' : 'faint'}`} style={{ marginTop: 8 }}>
+                  On revision {submission.feedback.revision}
+                  {submission.feedback.outdated
+                    && ' — you have submitted again since, so it may not describe your latest answer.'}
+                </div>
+              )}
               {submission.feedback.teacherName && (
                 <div className="small faint" style={{ marginTop: 8 }}>— {submission.feedback.teacherName}</div>
               )}
@@ -230,12 +254,22 @@ export default function QuestionWorkspace() {
 
             <span style={{ flex: 1 }} />
             {status && <span className="small muted">{status}</span>}
-            {!status && submission?.status === 'submitted' && (
+            {!status && submitted && (
               <span className="small muted">
-                Submitted {new Date(submission.submittedAt).toLocaleString()}
+                Revision {submitted.revision} submitted {new Date(submitted.submittedAt).toLocaleString()}
+                {submitted.late && <span className="badge warn" style={{ marginLeft: 6 }}>Late</span>}
               </span>
             )}
           </div>
+
+          {unsubmittedChanges && (
+            <div className="notice warn" role="status" style={{ margin: 0, borderRadius: 0 }}>
+              You have changes that are not submitted — your teacher sees revision {submitted.revision}.{' '}
+              <button type="button" className="btn sm ghost" onClick={restoreSubmitted} disabled={busy}>
+                Restore submitted code
+              </button>
+            </div>
+          )}
 
           <div className="editor-host">
             <CodeEditor value={code} language={language} onChange={setCode} onSubmitShortcut={run} />

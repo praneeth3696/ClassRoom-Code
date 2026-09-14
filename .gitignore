@@ -8,3 +8,5 @@ build/
 .DS_Store
 .vite/
 coverage/
+test-results/
+playwright-report/

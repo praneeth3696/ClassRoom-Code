@@ -6,7 +6,7 @@ import cors from 'cors';
 import { config, SERVER_ROOT } from './config.js';
 import { describeDb, query } from './db/index.js';
 import { publicLanguages } from './lib/languages.js';
-import { chooseExecutor } from './services/execution.js';
+import { chooseExecutor, executionQueueStats } from './services/execution.js';
 import { judge0Status } from './services/judge0.js';
 import { engineAvailability } from './services/dbEngines/index.js';
 import { isConfigured as aiConfigured } from './services/worksheetDraft.js';
@@ -20,11 +20,14 @@ import { submissionsRouter } from './routes/submissions.js';
 import { feedbackRouter, reviewRouter } from './routes/review.js';
 import { courseImportsRouter, importsRouter } from './routes/imports.js';
 import { errorHandler, notFoundHandler } from './middleware/errors.js';
+import { securityHeaders } from './middleware/securityHeaders.js';
 
 export function createApp() {
   const app = express();
 
   app.set('trust proxy', 1);
+  app.disable('x-powered-by');
+  app.use(securityHeaders({ production: config.env === 'production' }));
   app.use(express.json({ limit: '1mb' }));
   app.use(cookieParser());
   app.use(
@@ -50,6 +53,7 @@ export function createApp() {
           judge0: req.query.deep === 'true' ? await judge0Status() : { configured: Boolean(config.judge0.url) },
           localFallback: config.judge0.allowLocalFallback,
           databases: await engineAvailability(),
+          queue: executionQueueStats(),
         },
         import: { available: aiConfigured(), model: config.ai.model },
         time: new Date().toISOString(),

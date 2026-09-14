@@ -24,8 +24,9 @@ All of the MVP scope in SPEC.md §12 is built and verified, plus the academic
 structure and database labs added in Phase 8. [TIMELINE.md](TIMELINE.md) records
 what happened in each phase and why.
 
-Not started, from §13: admin/HOD oversight views, submission versioning, and
-deployment onto college infrastructure.
+From §13, **submission history** is built — every Submit is kept as a revision —
+and the platform ships as a **container image with a PostgreSQL compose stack**.
+Not started: admin/HOD oversight views.
 
 ## Running it
 
@@ -77,6 +78,24 @@ cd web && npm run build && cd ../server && npm start
 
 Everything is then on <http://localhost:4000>. Set `WEB_DIST` to serve the build
 from elsewhere.
+
+### Container
+
+The `Dockerfile` builds the frontend and the production server into one image
+that runs as an unprivileged user, applies migrations on start-up, and has a
+health check. `docker-compose.yml` runs it with PostgreSQL 16:
+
+```bash
+POSTGRES_PASSWORD=... JWT_SECRET=... PUBLIC_ORIGIN=https://labs.example.edu \
+GOOGLE_CLIENT_ID=... GOOGLE_CLIENT_SECRET=... docker compose up -d --build
+```
+
+Every setting the production config check requires is marked required in the
+compose file, so compose stops and names anything missing instead of the server
+refusing to boot. Judge0 is deliberately not part of the stack — it needs a
+privileged host and belongs on its own VM — so point `JUDGE0_URL` at it. CI
+builds the image and boots it in production mode against PostgreSQL on every
+push.
 
 ### Verifying a deployment
 
@@ -246,7 +265,17 @@ All endpoints require a session except `/api/health` and `/api/meta`.
 | `GET` | `/api/questions/:id/submission` | The caller's own submission + whether the window is open |
 | `POST` | `/api/questions/:id/run` | Self-check against the visible test cases — not a grade |
 | `PUT` | `/api/questions/:id/submission` | Save a draft without running |
-| `POST` | `/api/questions/:id/submit` | Submit or re-submit; re-runs and re-grades |
+| `POST` | `/api/questions/:id/submit` | Submit or re-submit; re-runs, re-grades, and records a new revision |
+| `GET` | `/api/submissions/:id/revisions` | Every submitted revision, newest first — the owning student or the course's teachers |
+
+### Review
+
+| Method | Path | Who |
+|---|---|---|
+| `GET` | `/api/worksheets/:id/progress` | Class-wide counts for teachers; a student's own state |
+| `GET` | `/api/questions/:id/submissions` | Assigned teacher — each student's graded revision, identical-answer flags, and who has not submitted |
+| `PUT` \| `DELETE` | `/api/submissions/:id/feedback` | Assigned teacher — comment and/or marks, recorded against the current revision |
+| `GET` | `/api/worksheets/:id/export.csv` | Assigned teacher — results and marks for every enrolled student |
 
 ### Authorization model
 
@@ -383,6 +412,29 @@ flags the result `degraded: true`. Production has no fallback: it returns 503.
   only (SPEC.md §7, §9).
 - **Submit re-runs the code being submitted**, so the recorded pass/fail always
   describes the submitted answer rather than whatever was last Run.
+- **Every Submit is kept as an immutable revision.** Run and Save Draft change
+  only the student's working copy, so experimenting after submitting — even after
+  the deadline, when Run is still allowed — never changes the answer being graded.
+
+### Load limits
+
+A whole lab pressing Run at once is the platform's peak load (QUESTIONS.md
+measured about 2 GB for 60 simultaneous database runs), so:
+
+- **Execution is queued.** At most `EXECUTION_CONCURRENCY` runs (default 8)
+  execute together and the rest wait their turn. A request that finds
+  `EXECUTION_QUEUE_LIMIT` already waiting, or waits longer than
+  `EXECUTION_QUEUE_TIMEOUT_MS`, gets a 503 the student can retry. `/api/health`
+  reports how many are active and waiting.
+- **Requests are rate-limited** per signed-in user — 60 runs and 20 submits a
+  minute, 30 import operations an hour — and sign-in per IP address. Counting per
+  user means a lab behind one college NAT address does not share one allowance.
+  Over a limit returns 429 with `Retry-After`. Sign-in limits read the client
+  address through one trusted proxy hop, so expose the server only behind that
+  proxy.
+
+Both are held in memory, which is exact for the single-process deployment.
+Running several instances behind a load balancer would need a shared store.
 
 ## Configuration
 
@@ -397,6 +449,14 @@ Error: Invalid production configuration:
   - DATABASE_URL is required in production
   - JWT_SECRET must be set in production
 ```
+
+Every response carries browser security headers: a Content-Security-Policy that
+allows scripts, connections and frames only from this origin — plus the inline
+styles and `blob:` workers Monaco needs — along with `nosniff`,
+`X-Frame-Options: DENY` and a strict referrer policy. HTTPS upgrades and HSTS
+are added only when `NODE_ENV=production`, so a plain-http development server
+keeps working. An over-tight policy fails silently in the browser, so a
+Playwright test loads the editor under it and fails on any violation.
 
 ## Creating an assignment, end to end
 
@@ -485,7 +545,9 @@ The worksheet appears in their class immediately. They open a question, pick a
 language, write code, and press **Run** — a self-check against the visible
 checks that does not submit. **Submit** records the answer and re-runs it, so
 the stored pass/fail always describes what was submitted. They can revise and
-re-submit until the deadline.
+re-submit until the deadline. Each submission is kept as a numbered revision; if
+they keep editing afterwards, the page says their teacher still sees the last
+revision they submitted and offers to restore it.
 
 ### 6. Review and feedback
 
@@ -493,6 +555,14 @@ Back in the worksheet, each question shows how many of the class have submitted
 and how many are passing. **Review** opens the submissions: the student's code,
 the automated result, and a box for a comment and marks. The student sees your
 comment on their own question page, next to their result.
+
+The review screen shows which revision you are reading, a **Late** badge, and the
+earlier revisions when there are several. A student who resubmits after your
+feedback is marked **Resubmitted**, so new work is easy to find. Answers that are
+identical to another student's, ignoring whitespace, are marked **Identical** — a
+prompt to look closer, not a plagiarism verdict. **Export CSV** on the worksheet
+page downloads every enrolled student's results and marks for the department's
+marks sheet.
 
 ## The frontend
 
@@ -518,7 +588,9 @@ shown: the main bundle is ~66 KB gzipped, with Monaco a separate ~840 KB chunk.
 ## Tests
 
 ```bash
-cd server && npm test                 # 191 unit and integration tests
+cd server && npm test                 # 233 unit and integration tests
+cd web && npm run lint && npm test    # ESLint, then 16 component and API-client tests
+cd web && npm run e2e                 # Playwright in Chromium against the real build
 cd server && npm run verify           # 53 end-to-end checks of the MVP flows
 cd server && npm run verify:college   # 29 checks of the hierarchy and database labs
 ```
@@ -526,6 +598,13 @@ cd server && npm run verify:college   # 29 checks of the hierarchy and database 
 The two `verify` scripts need a running server with `DEV_LOGIN` enabled, so they
 are staging and development checks rather than production ones.
 `verify:college` expects the department seed to be loaded.
+
+`npm run e2e` builds the frontend and starts the server itself on a throwaway
+database seeded with the demo course. It needs `python3` for the local runner
+and Chromium (`npx playwright install chromium`). One server test is skipped
+unless `LAB_SHEET_DOCX` points at a real lab sheet. CI runs everything above
+except the `verify` scripts on every push and pull request, plus a production
+smoke test of the container image.
 
 Each test process gets its own throwaway PGlite database, so files run in
 parallel without touching each other or your development data.
