@@ -38,6 +38,12 @@ function FeedbackForm({ submission, onSaved }) {
       <p className="hint" style={{ marginBottom: 10 }}>
         Explain what went wrong and why, so the student can fix it themselves.
       </p>
+      {submission.feedback?.outdated && (
+        <div className="notice warn">
+          Your feedback was on revision {submission.feedback.revision}; the student has since submitted
+          revision {submission.revision}. Saving updates it to the latest revision.
+        </div>
+      )}
       <ErrorNotice error={error} />
 
       <div className="field">
@@ -57,6 +63,61 @@ function FeedbackForm({ submission, onSaved }) {
         {saved && <span className="small" style={{ color: 'var(--pass)' }}>Saved — the student can see this.</span>}
       </div>
     </form>
+  );
+}
+
+/** Earlier submitted revisions, for a student who has submitted more than once. */
+function RevisionHistory({ submission }) {
+  const [revisions, setRevisions] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setRevisions(null);
+    setSelected(null);
+    setError(null);
+    api.submissionRevisions(submission.id)
+      .then((res) => { if (!cancelled) setRevisions(res.revisions); })
+      .catch((err) => { if (!cancelled) setError(err); });
+    return () => { cancelled = true; };
+  }, [submission.id, submission.revision]);
+
+  if (error) return <ErrorNotice error={error} />;
+  if (!revisions) return null;
+
+  const earlier = revisions.filter((r) => r.revision !== submission.revision);
+  const shown = earlier.find((r) => r.revision === selected) ?? null;
+  if (earlier.length === 0) return null;
+
+  return (
+    <div className="card">
+      <h3>Earlier revisions</h3>
+      <div className="row" style={{ flexWrap: 'wrap', gap: 6, marginBottom: shown ? 12 : 0 }}>
+        {earlier.map((r) => (
+          <button
+            key={r.revision}
+            type="button"
+            className={`btn sm${r.revision === selected ? ' primary' : ''}`}
+            onClick={() => setSelected(r.revision === selected ? null : r.revision)}
+          >
+            Revision {r.revision} · {r.autoPassed === true ? 'passed' : r.autoPassed === false ? 'failed' : 'ungraded'}
+            {r.late ? ' · late' : ''}
+          </button>
+        ))}
+      </div>
+      {shown && (
+        <>
+          <div className="small muted" style={{ marginBottom: 8 }}>
+            Submitted {new Date(shown.submittedAt).toLocaleString()}
+          </div>
+          <div style={{ height: 240, border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+            <CodeEditor value={shown.code} language={shown.language} onChange={() => {}} readOnly />
+          </div>
+          {shown.result && <div style={{ marginTop: 12 }}><TestResults result={shown.result} /></div>}
+        </>
+      )}
+    </div>
   );
 }
 
@@ -121,11 +182,18 @@ export default function SubmissionsReview() {
                 <Avatar user={s.student} />
                 <span className="grow" style={{ minWidth: 0 }}>
                   <div style={{ fontWeight: 550, overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.student.name}</div>
-                  <div className="small muted">{s.status === 'submitted' ? 'Submitted' : 'Draft'}</div>
+                  <div className="small muted">
+                    {s.status === 'submitted' ? `Submitted · revision ${s.revision}` : 'Draft'}
+                  </div>
                 </span>
                 <span className="stack" style={{ gap: 3, alignItems: 'flex-end' }}>
                   <AutoResultBadge autoPassed={s.autoPassed} compact />
-                  {s.feedback && <span className="badge info">Reviewed</span>}
+                  {s.late && <span className="badge warn">Late</span>}
+                  {s.feedback && (
+                    <span className={`badge ${s.feedback.outdated ? 'warn' : 'info'}`}>
+                      {s.feedback.outdated ? 'Resubmitted' : 'Reviewed'}
+                    </span>
+                  )}
                 </span>
               </button>
             ))}
@@ -151,6 +219,8 @@ export default function SubmissionsReview() {
                     <div className="small muted">{selected.student.email}</div>
                   </div>
                   <div className="row">
+                    {selected.revision != null && <span className="badge">Revision {selected.revision}</span>}
+                    {selected.late && <span className="badge warn">Late</span>}
                     <span className="badge">{selected.language}</span>
                     <AutoResultBadge autoPassed={selected.autoPassed} />
                   </div>
@@ -159,6 +229,7 @@ export default function SubmissionsReview() {
                   {selected.submittedAt
                     ? `Submitted ${new Date(selected.submittedAt).toLocaleString()}`
                     : `Draft, last edited ${new Date(selected.updatedAt).toLocaleString()}`}
+                  {selected.hasUnsubmittedChanges && ' · the student has edits they have not submitted'}
                 </div>
                 <div style={{ height: 300, border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
                   <CodeEditor value={selected.code} language={selected.language} onChange={() => {}} readOnly />
@@ -171,6 +242,8 @@ export default function SubmissionsReview() {
                   <TestResults result={selected.lastRunResult} />
                 </div>
               )}
+
+              {selected.revisionCount > 1 && <RevisionHistory submission={selected} />}
 
               <FeedbackForm submission={selected} onSaved={load} />
             </div>

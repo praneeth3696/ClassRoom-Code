@@ -18,6 +18,7 @@ function StudentQuestionRow({ q, index }) {
           {q.points != null && ` · ${q.points} points`}
         </div>
       </span>
+      {mine?.late && <span className="badge warn">Late</span>}
       {mine?.feedback && <span className="badge info">Feedback</span>}
       {mine?.status === 'submitted'
         ? <AutoResultBadge autoPassed={mine.autoPassed} compact />

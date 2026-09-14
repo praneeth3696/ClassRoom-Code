@@ -115,4 +115,5 @@ export const api = {
   questionSubmissions: (questionId) => request('GET', `/api/questions/${questionId}/submissions`),
   worksheetProgress: (worksheetId) => request('GET', `/api/worksheets/${worksheetId}/progress`),
   saveFeedback: (submissionId, body) => request('PUT', `/api/submissions/${submissionId}/feedback`, body),
+  submissionRevisions: (submissionId) => request('GET', `/api/submissions/${submissionId}/revisions`),
 };
