@@ -4,6 +4,7 @@ import { isAdmin, teachesCourse } from './access.js';
 import {
   LATEST_REVISION_COLUMNS, LATEST_REVISION_JOIN, revisionCountOf, shapeFeedback, shapeLatestRevision,
 } from './revisions.js';
+import { markIdenticalSubmissions } from './similarity.js';
 
 /**
  * Teacher-side review of submissions, and the progress summaries both roles
@@ -52,7 +53,10 @@ function shapeSubmissionRow(row, { includeCode = true } = {}) {
   };
 }
 
-/** Every submission for one question, for the teacher's review screen. */
+/**
+ * Every submission for one question, for the teacher's review screen, with
+ * answers that are identical apart from whitespace pointing at each other.
+ */
 export async function listQuestionSubmissions(questionId) {
   const rows = await many(
     `SELECT ${SUBMISSION_SELECT} ${SUBMISSION_JOINS}
@@ -60,7 +64,7 @@ export async function listQuestionSubmissions(questionId) {
      ORDER BY u.name`,
     [questionId],
   );
-  return rows.map((r) => shapeSubmissionRow(r));
+  return markIdenticalSubmissions(rows.map((r) => shapeSubmissionRow(r)));
 }
 
 /** Students enrolled in the course who have no submission for this question. */

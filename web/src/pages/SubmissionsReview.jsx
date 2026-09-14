@@ -189,6 +189,11 @@ export default function SubmissionsReview() {
                 <span className="stack" style={{ gap: 3, alignItems: 'flex-end' }}>
                   <AutoResultBadge autoPassed={s.autoPassed} compact />
                   {s.late && <span className="badge warn">Late</span>}
+                  {s.identicalTo?.length > 0 && (
+                    <span className="badge fail" title={`Identical to ${s.identicalTo.map((o) => o.name).join(', ')}`}>
+                      Identical
+                    </span>
+                  )}
                   {s.feedback && (
                     <span className={`badge ${s.feedback.outdated ? 'warn' : 'info'}`}>
                       {s.feedback.outdated ? 'Resubmitted' : 'Reviewed'}
@@ -231,6 +236,12 @@ export default function SubmissionsReview() {
                     : `Draft, last edited ${new Date(selected.updatedAt).toLocaleString()}`}
                   {selected.hasUnsubmittedChanges && ' · the student has edits they have not submitted'}
                 </div>
+                {selected.identicalTo?.length > 0 && (
+                  <div className="notice warn">
+                    Identical, ignoring whitespace, to what {selected.identicalTo.map((o) => o.name).join(', ')}
+                    {' '}submitted.
+                  </div>
+                )}
                 <div style={{ height: 300, border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
                   <CodeEditor value={selected.code} language={selected.language} onChange={() => {}} readOnly />
                 </div>
