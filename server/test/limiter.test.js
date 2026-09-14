@@ -72,7 +72,14 @@ describe('execution limiter', () => {
     const running = deferredTask(started, 'running');
     const first = limiter.run(running.task);
 
-    await assert.rejects(limiter.run(async () => 'late'), (err) => err.status === 503);
+    // The limiter unrefs its timeout so it never holds the process open. Keep the
+    // event loop alive ourselves, or Node may exit before the timeout fires.
+    const keepAlive = setInterval(() => {}, 1000);
+    try {
+      await assert.rejects(limiter.run(async () => 'late'), (err) => err.status === 503);
+    } finally {
+      clearInterval(keepAlive);
+    }
     assert.equal(limiter.stats().waiting, 0, 'a timed-out waiter leaves the queue');
 
     running.release();

@@ -54,10 +54,17 @@ describe('graceful shutdown', () => {
   });
 
   test('forces an exit when the server never finishes closing', async () => {
-    const code = await new Promise((resolve) => {
-      createShutdown({ server: fakeServer({ closes: false }), timeoutMs: 20, exit: resolve, log: quiet })('SIGTERM');
-    });
-    assert.equal(code, 1);
+    // The force-exit timer is unref'd so it never holds the process open. Keep the
+    // event loop alive ourselves, or Node may exit before the timer fires.
+    const keepAlive = setInterval(() => {}, 1000);
+    try {
+      const code = await new Promise((resolve) => {
+        createShutdown({ server: fakeServer({ closes: false }), timeoutMs: 20, exit: resolve, log: quiet })('SIGTERM');
+      });
+      assert.equal(code, 1);
+    } finally {
+      clearInterval(keepAlive);
+    }
   });
 
   test('a second signal does not start a second shutdown', async () => {
